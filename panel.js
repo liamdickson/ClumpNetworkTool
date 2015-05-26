@@ -1,5 +1,6 @@
-var ext_console = "";
+var ext_console = "{";
 var inc = 0;
+var passed = 0;
 
 chrome.devtools.network.onRequestFinished.addListener( function(request) {
 	if(request.request.url.includes("clump")){
@@ -13,10 +14,14 @@ chrome.devtools.network.onRequestFinished.addListener( function(request) {
 
 chrome.devtools.network.onRequestFinished.addListener( function(request) {
 	if(request.request.url.includes("clump")){
-    	ext_console += JSON.stringify(request.response, null, 4) + "\n";
+		if(passed){
+    		ext_console += ",";
+    	}
+    	ext_console += "\"obj" + passed + "\":" + JSON.stringify(request, null, 4);
+    	passed += 1;
 	}
 });
 
 document.getElementById("log_btn").addEventListener("click", function(){
-	$('#log').text(ext_console);
+	$('#log').text(ext_console + "}");
 });
